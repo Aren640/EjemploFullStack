@@ -1,0 +1,14 @@
+{
+  "name": "aren640/autoescuela-veracruz-api",
+  "description": "API PHP para Autoescuela Veracruz con MongoDB.",
+  "type": "project",
+  "require": {
+    "php": "^8.3",
+    "ext-mongodb": "^2.0",
+    "mongodb/mongodb": "^2.1"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  }
+}

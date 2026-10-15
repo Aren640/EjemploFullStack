@@ -1,37 +1,53 @@
-# Autoescuela Veracruz — Fullstack
+# Autoescuela Veracruz — PHP y MongoDB
 
-Aplicación separada en frontend estático servido por Nginx, API Node.js/Express y PostgreSQL. Nginx reenvía `/api/` al backend; los contactos se almacenan en PostgreSQL.
+Frontend estático servido por Nginx, API PHP/Apache y MongoDB. Nginx pasa `/api/` a PHP; los contactos se guardan en MongoDB.
 
-## Despliegue en una VM con Docker Compose
+## Despliegue por SSH en Ubuntu
 
-Instala Docker Engine y el plugin Docker Compose en la VM. Después:
+Conéctate por SSH a la VM. Si aún no clonaste el repositorio:
 
 ```sh
 git clone https://github.com/Aren640/EjemploFullStack.git
 cd EjemploFullStack
-cp .env.example .env
 ```
 
-Edita `.env` y cambia `DB_PASSWORD` por una contraseña aleatoria, única y privada. No subas `.env` a GitHub. Los valores `HOST_PORT` y `API_HOST_PORT` configuran los puertos públicos del frontend (3000) y API (8080).
+Si ya tenías el proyecto clonado, entra a su carpeta y actualízalo:
+
+```sh
+cd ~/EjemploFullStack
+git pull origin main
+```
+
+Elimina el `.env` viejo de la configuración PostgreSQL y crea uno nuevo para MongoDB. El siguiente bloque genera contraseñas aleatorias en la VM, no las muestra y protege el archivo:
+
+```sh
+cp .env.example .env
+sed -i "s|^MONGO_ROOT_PASSWORD=.*|MONGO_ROOT_PASSWORD=$(openssl rand -hex 32)|; s|^MONGO_APP_PASSWORD=.*|MONGO_APP_PASSWORD=$(openssl rand -hex 32)|" .env
+chmod 600 .env
+```
+
+Construye e inicia los servicios:
 
 ```sh
 docker compose up -d --build
 docker compose ps
-docker compose logs -f
+docker compose logs --tail=100
 ```
 
-Abre `http://IP_PUBLICA_DE_LA_VM:3000`. Permite el puerto 3000 en el firewall de la VM y en las reglas de red del proveedor. El puerto 8080 también se publica para pruebas directas de la API; si no lo necesitas, quita el bloque `ports` del servicio `backend` en `docker-compose.yml` y usa la API a través de Nginx. PostgreSQL no publica ningún puerto al exterior.
+Abre `http://IP_PUBLICA_DE_LA_VM:3000` y permite TCP 3000 en el firewall de Ubuntu y las reglas de red del proveedor cloud. La API no está publicada al exterior. MongoDB solo escucha en localhost de la VM (puerto `MONGO_HOST_PORT`), nunca en una interfaz pública; Nginx retransmite `/api/` al backend dentro de la red Docker.
 
-Compose espera a que PostgreSQL y la API estén saludables antes de iniciar la web. Los datos viven en el volumen persistente `contacts_data`. Para actualizar: `git pull` y `docker compose up -d --build`. Para parar: `docker compose down`. No uses `docker compose down -v` salvo que quieras borrar permanentemente la base de datos.
+MongoDB Compass es opcional: no hace falta instalarlo en la VM ni usarlo para que funcione la aplicación. Si quieres inspeccionar la base, instala Compass en tu ordenador y, desde otro terminal de tu ordenador, crea un túnel SSH con `ssh -L 27017:127.0.0.1:27017 USUARIO@IP_PUBLICA_DE_LA_VM`. En Compass conecta a `mongodb://mongo_admin:CONTRASEÑA_ROOT@127.0.0.1:27017/?authSource=admin`, sustituyendo `CONTRASEÑA_ROOT` por el valor de `MONGO_ROOT_PASSWORD` en el `.env` de la VM. Cierra el túnel con Ctrl+C cuando termines.
 
-Para recibir datos personales desde Internet, configura HTTPS mediante un proxy inverso y limita el acceso a los puertos según sea necesario.
+Para actualizar, ejecuta `git pull origin main` y `docker compose up -d --build`. Para parar los servicios usa `docker compose down`. No uses `docker compose down -v`: eliminaría la base de datos persistente. Conserva `.env` en la VM y nunca lo subas a GitHub.
+
+Si ya habías iniciado el despliegue anterior, esta versión no migra automáticamente los contactos de PostgreSQL; los guarda en una base de datos MongoDB nueva. La contraseña `.env` anterior no sirve para MongoDB: ejecuta el bloque de generación anterior. Los volúmenes PostgreSQL antiguos no se borran.
+
+Para uso público con datos personales, añade HTTPS mediante un proxy inverso.
 
 ## Servicios y API
 
-- `frontend/Dockerfile`: imagen Nginx que sirve los ficheros estáticos existentes en la raíz del proyecto; no hay una herramienta de compilación frontend en esta aplicación.
-- `backend/Dockerfile`: imagen Node.js de producción para Express y el cliente PostgreSQL.
-- `db`: PostgreSQL 15 con volumen persistente y sin puerto público.
-- `GET /api/health`: estado de la API y de la conexión a la base de datos.
+- `frontend/Dockerfile`: Nginx sirve los ficheros estáticos y retransmite `/api/` a PHP.
+- `backend/Dockerfile`: PHP 8.3/Apache, extensión MongoDB y librería oficial Composer.
+- `db`: MongoDB 8 con volumen `mongo_data` y usuario de aplicación con permisos solo de lectura/escritura en la base de datos de la app.
+- `GET /api/health`: comprueba la conexión a MongoDB.
 - `POST /api/contactos`: valida y guarda `nombre`, `apellidos` y `email`.
-
-Los puertos, credenciales y nombre de base de datos se configuran mediante `.env`; usa `.env.example` como plantilla, nunca como contraseña de producción.

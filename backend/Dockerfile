@@ -1,13 +1,19 @@
-FROM node:22-alpine
+FROM php:8.3-apache
 
-ENV NODE_ENV=production
-WORKDIR /app
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends $PHPIZE_DEPS libssl-dev \
+	&& pecl install mongodb \
+	&& docker-php-ext-enable mongodb \
+	&& a2enmod rewrite \
+	&& rm -rf /var/lib/apt/lists/*
 
-COPY package*.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+WORKDIR /var/www/html
+COPY composer.json ./
+RUN composer install --no-dev --no-interaction --prefer-dist --classmap-authoritative
 
-COPY --chown=node:node server.js ./server.js
-USER node
+COPY public/ ./
+COPY .htaccess /var/www/html/.htaccess
+RUN chown -R www-data:www-data /var/www/html
 
-EXPOSE 8080
-CMD ["npm", "start"]
+EXPOSE 80
