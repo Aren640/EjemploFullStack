@@ -16,6 +16,8 @@ npm start
 
 Abre `http://localhost:3000`. Durante el desarrollo puedes usar `npm run dev` para reiniciar el servidor automáticamente.
 
+Puedes copiar `.env.example` a `.env` y ajustar la configuración local. `PORT` cambia el puerto del servidor y `CONTACTS_FILE` permite elegir dónde guardar los contactos. El fichero `.env` está excluido de Git; no guardes secretos en `.env.example`.
+
 ## API
 
 - `GET /api/health`: comprueba que el servidor responde.
