@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Autoescuela</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <nav>
+                <img src="img/logo.png" class="logo-img">
+
+            <div class="menu">
+                <a href="index.html">INICIO</a>
+                <a href="#nosotros">SOBRE NOSOTROS</a>
+                <a href="#permisos">PERMISOS</a>
+                <a href="#formulario">CONTACTANOS</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="portada">
+        <h1>AUTOESCUELA VERACRUZ</h1>
+        <p>Donde aprobar es imposible</p>
+        <a href="#formulario" class="botonPortada">Apúntate ya</a>
+    </div>
+
+    <section class="informacion" id="nosotros">
+        <div class="info-texto">
+            <h2>SOBRE NOSOTROS</h2>
+            <p>
+                En Autoescuelas Veracruz, no solo te enseñamos a conducir; te acompañamos en el camino hacia tu libertad y autonomía. Llevamos años formando a conductores seguros, responsables y preparados para afrontar cualquier reto en la carretera. Creemos que aprender a conducir no debe ser un proceso estresante, sino una experiencia emocionante y enriquecedora. Por eso, nuestro equipo de profesores certificados combina paciencia, dedicación y una metodología cercana para adaptarse al ritmo de cada alumno.
+            </p>
+            <ul class="lista-info">
+                <li>Profesores con experiencia real</li>
+                <li>Clases practicas adaptadas</li>
+                <li>Horarios flexibles y apoyo cercano</li>
+            </ul>
+        </div>
+        <div class="info-imagen">
+            <img src="img/autoescuela.jpg">
+        </div>
+    </section>
+
+    <section class="permisos" id="permisos">
+        <h2>PERMISOS</h2>
+        <div class="permisos-grid">
+            <article class="permiso">
+                <h3>Permiso A</h3>
+                <p>Para conducir ciclomotores.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+            <article class="permiso">
+                <h3>Permiso B1</h3>
+                <p>Para motocicletas de hasta 125 cm y 11 kW.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+            <article class="permiso">
+                <h3>Permiso A2</h3>
+                <p>Para conducir motocicletas de hasta 35 kW.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+            <article class="permiso">
+                <h3>Permiso A3</h3>
+                <p>Para motocicletas sin limite de potencia.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+            <article class="permiso">
+                <h3>Permiso B2</h3>
+                <p>Para coches y vehiculos de hasta 3.500 kg.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+            <article class="permiso">
+                <h3>Permiso C1</h3>
+                <p>Para conducir camiones de entre 3.500 y 7.500 kg.</p>
+                <a href="" class="botonPermiso">Mas informacion</a>
+            </article>
+        </div>
+    </section>
+
+    <section class="faq">
+  <h2>FAQ</h2>
+
+  <details>
+    <summary>¿Cómo puedo realizar un pedido?</summary>
+    <p>Puedes hacer un pedido seleccionando el producto y haciendo clic en el botón de comprar.</p>
+  </details>
+
+  <details>
+    <summary>¿Qué opciones de pago están disponibles?</summary>
+    <p>Aceptamos tarjetas de crédito, débito y pagos a través de plataformas seguras en línea.</p>
+  </details>
+
+  <details>
+    <summary>¿Cuál es el tiempo de entrega?</summary>
+    <p>Los envíos estándar suelen tardar entre 3 y 5 días hábiles.</p>
+  </details>
+</section>
+
+    <section class="formulario" id="formulario">
+        <div class="formu">
+            <form id="contactForm">
+                <fieldset>
+                    <legend>CONTACTA CON NOSOTROS</legend>
+
+                    <div class="contenedor">
+                        <label for="nombre">Nombre:</label>
+                            <input id="nombre" type="text" name="nombre" maxlength="100" autocomplete="given-name" required>
+                    </div>
+
+                    <div class="contenedor">
+                        <label for="apellidos">Apellidos:</label>
+                            <input id="apellidos" type="text" name="apellidos" maxlength="100" autocomplete="family-name" required>
+                    </div>
+
+                    <div class="contenedor">
+                        <label for="email">Mail:</label>
+                            <input id="email" type="email" name="email" maxlength="254" autocomplete="email" required>
+                    </div>
+
+                    <button type="submit" class="boton">Enviar</button>
+                 
+                </fieldset>
+            </form>
+        </div>
+        <div class="formulario-imagen">
+            <img src="img/maps.png" alt="Coche de la Autoescuela Veracruz">
+        </div>
+    </section>
+
+
+
+    <script src="app.js"></script>
+</body>
+</html>
